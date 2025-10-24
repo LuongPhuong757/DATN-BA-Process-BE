@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ImageProcessingResult } from '../entities/image-processing-result.entity';
 import { ProcessedItem } from '../entities/processed-item.entity';
-import { CreateImageProcessingResultDto } from '../dto/create-image-processing-result.dto';
+import { CreateImageProcessingResultDto, UpdateImageProcessingResultDto } from '../dto/create-image-processing-result.dto';
 
 @Injectable()
 export class ImageProcessingService {
@@ -28,7 +28,8 @@ export class ImageProcessingService {
     // Create processed items
     const processedItems = createDto.results.map(item => 
       this.processedItemRepository.create({
-        itemId: item.id,
+        stt: item.stt, // Map stt from frontend instead of id
+        itemId: item.itemId || 0, // Use itemId from frontend or default to 0
         content: item.content,
         type: item.type,
         database: item.database,
@@ -56,6 +57,52 @@ export class ImageProcessingService {
   }
 
   async getImageProcessingResultById(id: number): Promise<ImageProcessingResult> {
+    return this.imageProcessingResultRepository.findOne({
+      where: { id },
+      relations: ['processedItems'],
+    });
+  }
+
+  async updateImageProcessingResult(id: number, updateDto: UpdateImageProcessingResultDto): Promise<ImageProcessingResult> {
+    // Check if the record exists
+    const existingResult = await this.imageProcessingResultRepository.findOne({
+      where: { id },
+      relations: ['processedItems'],
+    });
+
+    if (!existingResult) {
+      throw new Error(`ImageProcessingResult with id ${id} not found`);
+    }
+
+    // Update main result record
+    await this.imageProcessingResultRepository.update(id, {
+      title: updateDto.title,
+      body: updateDto.body,
+      source: updateDto.source,
+      timestamp: new Date(updateDto.timestamp),
+    });
+
+    // Delete existing processed items
+    await this.processedItemRepository.delete({ imageProcessingResultId: id });
+
+    // Create new processed items
+    const processedItems = updateDto.results.map(item => 
+      this.processedItemRepository.create({
+        stt: item.stt,
+        itemId: item.itemId || 0,
+        content: item.content,
+        type: item.type,
+        database: item.database,
+        description: item.description,
+        imageProcessingResultId: id,
+        dataType: item.dataType,
+        dbField: item.dbField,
+      })
+    );
+
+    await this.processedItemRepository.save(processedItems);
+
+    // Return updated result with items
     return this.imageProcessingResultRepository.findOne({
       where: { id },
       relations: ['processedItems'],

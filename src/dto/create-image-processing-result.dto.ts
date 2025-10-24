@@ -1,9 +1,13 @@
-import { IsString, IsNumber, IsArray, ValidateNested, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsNumber, IsArray, ValidateNested, IsOptional, IsNumberString } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 
 export class ProcessedItemDto {
+  // Remove validation for id completely - let frontend send any value
+  id?: any;
+
+  @IsOptional()
   @IsNumber()
-  id: number;
+  stt?: number;
 
   @IsString()
   content: string;
@@ -17,10 +21,8 @@ export class ProcessedItemDto {
   @IsString()
   description: string;
 
-  // Add these fields to match the actual payload
-  @IsOptional()
-  @IsNumber()
-  itemId?: number;
+  // Remove validation for itemId completely - let frontend send any value
+  itemId?: any;
 
   @IsOptional()
   @IsNumber()
@@ -37,6 +39,25 @@ export class ProcessedItemDto {
 }
 
 export class CreateImageProcessingResultDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProcessedItemDto)
+  results: ProcessedItemDto[];
+
+  @IsString()
+  timestamp: string;
+
+  @IsString()
+  source: string;
+
+  @IsString()
+  title: string;
+
+  @IsString()
+  body: string;
+}
+
+export class UpdateImageProcessingResultDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ProcessedItemDto)

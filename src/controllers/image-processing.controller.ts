@@ -1,6 +1,6 @@
-import { Controller, Post, Get, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Get, Put, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { ImageProcessingService } from '../services/image-processing.service';
-import { CreateImageProcessingResultDto } from '../dto/create-image-processing-result.dto';
+import { CreateImageProcessingResultDto, UpdateImageProcessingResultDto } from '../dto/create-image-processing-result.dto';
 import { ImageProcessingResult } from '../entities/image-processing-result.entity';
 
 @Controller('posts')
@@ -24,5 +24,13 @@ export class ImageProcessingController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ImageProcessingResult> {
     return this.imageProcessingService.getImageProcessingResultById(id);
+  }
+
+  @Put(':id')
+  async updateImageProcessingResult(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateDto: UpdateImageProcessingResultDto,
+  ): Promise<ImageProcessingResult> {
+    return this.imageProcessingService.updateImageProcessingResult(id, updateDto);
   }
 }

@@ -6,6 +6,9 @@ export class ProcessedItem {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'int', nullable: true })
+  stt: number;
+
   @Column({ type: 'int' })
   itemId: number;
 
