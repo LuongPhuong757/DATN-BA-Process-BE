@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -19,10 +20,23 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
 
+  // Swagger configuration
+  const config = new DocumentBuilder()
+    .setTitle('Image Processing API')
+    .setDescription('API for processing image analysis results with projects and screens')
+    .setVersion('1.0')
+    .addTag('projects', 'Project management endpoints')
+    .addTag('posts', 'Image processing endpoints')
+    .build();
+  
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
   const port = process.env.PORT;
   await app.listen(port);
   
   console.log(`Application is running on: http://localhost:${port}`);
+  console.log(`Swagger documentation: http://localhost:${port}/api`);
 }
 bootstrap();
 

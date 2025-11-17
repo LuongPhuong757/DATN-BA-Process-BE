@@ -3,8 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ImageProcessingController } from './controllers/image-processing.controller';
 import { ImageProcessingService } from './services/image-processing.service';
+import { ProjectController } from './controllers/project.controller';
+import { ProjectService } from './services/project.service';
 import { ImageProcessingResult } from './entities/image-processing-result.entity';
 import { ProcessedItem } from './entities/processed-item.entity';
+import { Screen } from './entities/screen.entity';
+import { Project } from './entities/project.entity';
 
 @Module({
   imports: [
@@ -21,7 +25,7 @@ import { ProcessedItem } from './entities/processed-item.entity';
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
-          entities: [ImageProcessingResult, ProcessedItem],
+          entities: [ImageProcessingResult, ProcessedItem, Screen, Project],
           migrations: ['dist/migrations/*.js'],
           migrationsTableName: 'migrations',
           synchronize: false, // Disable synchronize when using migrations
@@ -31,9 +35,9 @@ import { ProcessedItem } from './entities/processed-item.entity';
       },
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([ImageProcessingResult, ProcessedItem]),
+    TypeOrmModule.forFeature([ImageProcessingResult, ProcessedItem, Screen, Project]),
   ],
-  controllers: [ImageProcessingController],
-  providers: [ImageProcessingService],
+  controllers: [ImageProcessingController, ProjectController],
+  providers: [ImageProcessingService, ProjectService],
 })
 export class AppModule { }

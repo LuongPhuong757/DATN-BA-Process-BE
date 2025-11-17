@@ -21,6 +21,7 @@ export class ImageProcessingService {
       body: createDto.body,
       source: createDto.source,
       timestamp: new Date(createDto.timestamp),
+      screenId: createDto.screenId,
     });
 
     const savedResult = await this.imageProcessingResultRepository.save(imageProcessingResult);
@@ -50,10 +51,17 @@ export class ImageProcessingService {
   }
 
   async getAllImageProcessingResults(): Promise<ImageProcessingResult[]> {
-    return this.imageProcessingResultRepository.find({
-      relations: ['processedItems'],
+    const results = await this.imageProcessingResultRepository.find({
+      relations: ['processedItems', 'screen', 'screen.project'],
       order: { createdAt: 'DESC' },
     });
+
+    // Replace title with projectName and source with screenName
+    return results.map(result => ({
+      ...result,
+      title: result.screen?.project?.name || result.title,
+      source: result.screen?.name || result.source,
+    }));
   }
 
   async getImageProcessingResultById(id: number): Promise<ImageProcessingResult> {

@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { ProcessedItem } from './processed-item.entity';
+import { Screen } from './screen.entity';
 
 @Entity('image_processing_results')
 export class ImageProcessingResult {
@@ -20,6 +21,13 @@ export class ImageProcessingResult {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @Column({ type: 'int' })
+  screenId: number;
+
+  @ManyToOne(() => Screen, screen => screen.imageProcessingResults)
+  @JoinColumn({ name: 'screenId' })
+  screen: Screen;
 
   @OneToMany(() => ProcessedItem, processedItem => processedItem.imageProcessingResult)
   processedItems: ProcessedItem[];
