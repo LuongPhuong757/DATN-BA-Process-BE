@@ -22,6 +22,8 @@ export class ImageProcessingService {
       source: createDto.source,
       timestamp: new Date(createDto.timestamp),
       screenId: createDto.screenId,
+      imageUrl: createDto.imageUrl,
+      urlSheet: createDto.urlSheet,
     });
 
     const savedResult = await this.imageProcessingResultRepository.save(imageProcessingResult);
@@ -38,6 +40,8 @@ export class ImageProcessingService {
         imageProcessingResultId: savedResult.id,
         dataType: item.dataType,
         dbField: item.dbField,
+        io: item.io,
+        required: item.required,
       })
     );
 
@@ -88,6 +92,8 @@ export class ImageProcessingService {
       body: updateDto.body,
       source: updateDto.source,
       timestamp: new Date(updateDto.timestamp),
+      imageUrl: updateDto.imageUrl,
+      urlSheet: updateDto.urlSheet,
     });
 
     // Delete existing processed items
@@ -105,6 +111,8 @@ export class ImageProcessingService {
         imageProcessingResultId: id,
         dataType: item.dataType,
         dbField: item.dbField,
+        io: item.io,
+        required: item.required,
       })
     );
 

@@ -169,8 +169,9 @@ coverage/
 
 # Prettier
 .prettierignore
+service-account.json
 
 # Lock files (uncomment if you want to ignore them)
-# package-lock.json
+package-lock.json
 # yarn.lock
 # pnpm-lock.yaml

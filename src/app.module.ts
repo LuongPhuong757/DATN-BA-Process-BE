@@ -5,6 +5,9 @@ import { ImageProcessingController } from './controllers/image-processing.contro
 import { ImageProcessingService } from './services/image-processing.service';
 import { ProjectController } from './controllers/project.controller';
 import { ProjectService } from './services/project.service';
+import { UploadController } from './controllers/upload.controller';
+import { UploadService } from './services/upload.service';
+import { GoogleSheetModule } from './google-sheet/google-sheet.module';
 import { ImageProcessingResult } from './entities/image-processing-result.entity';
 import { ProcessedItem } from './entities/processed-item.entity';
 import { Screen } from './entities/screen.entity';
@@ -36,8 +39,9 @@ import { Project } from './entities/project.entity';
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([ImageProcessingResult, ProcessedItem, Screen, Project]),
+    GoogleSheetModule,
   ],
-  controllers: [ImageProcessingController, ProjectController],
-  providers: [ImageProcessingService, ProjectService],
+  controllers: [ImageProcessingController, ProjectController, UploadController],
+  providers: [ImageProcessingService, ProjectService, UploadService],
 })
 export class AppModule { }

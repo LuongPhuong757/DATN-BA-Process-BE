@@ -2,9 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  
+  // Serve static files from uploads folder
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/uploads/',
+  });
   
   // Enable CORS
   app.enableCors({
@@ -27,6 +34,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('projects', 'Project management endpoints')
     .addTag('posts', 'Image processing endpoints')
+    .addTag('upload', 'Image upload endpoints')
     .build();
   
   const document = SwaggerModule.createDocument(app, config);

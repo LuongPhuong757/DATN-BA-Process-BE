@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsArray, ValidateNested, IsOptional, IsNumberString } from 'class-validator';
+import { IsString, IsNumber, IsArray, ValidateNested, IsOptional, IsNumberString, IsBoolean } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -31,12 +31,13 @@ export class ProcessedItemDto {
   @IsString()
   type: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Database name',
     example: 'database_name',
   })
+  @IsOptional()
   @IsString()
-  database: string;
+  database?: string;
 
   @ApiProperty({
     description: 'Description of the processed item',
@@ -74,6 +75,22 @@ export class ProcessedItemDto {
   @IsOptional()
   @IsString()
   dbField?: string;
+
+  @ApiPropertyOptional({
+    description: 'Input/Output type',
+    example: 'Output',
+  })
+  @IsOptional()
+  @IsString()
+  io?: string;
+
+  @ApiPropertyOptional({
+    description: 'Whether the field is required',
+    example: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  required?: boolean;
 }
 
 export class CreateImageProcessingResultDto {
@@ -131,6 +148,22 @@ export class CreateImageProcessingResultDto {
   })
   @IsNumber()
   screenId: number;
+
+  @ApiPropertyOptional({
+    description: 'URL of the processed image',
+    example: '/uploads/1764041190551-321115850.jpeg',
+  })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @ApiPropertyOptional({
+    description: 'URL of the Google Sheet',
+    example: 'https://docs.google.com/spreadsheets/d/1pbJAg3jWeKHZBk3T1Np44TFxh0nZU4DD0WNuOPgaZf4/edit',
+  })
+  @IsOptional()
+  @IsString()
+  urlSheet?: string;
 }
 
 export class UpdateImageProcessingResultDto {
@@ -181,4 +214,20 @@ export class UpdateImageProcessingResultDto {
   })
   @IsString()
   body: string;
+
+  @ApiPropertyOptional({
+    description: 'URL of the processed image',
+    example: '/uploads/1764041190551-321115850.jpeg',
+  })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @ApiPropertyOptional({
+    description: 'URL of the Google Sheet',
+    example: 'https://docs.google.com/spreadsheets/d/1pbJAg3jWeKHZBk3T1Np44TFxh0nZU4DD0WNuOPgaZf4/edit',
+  })
+  @IsOptional()
+  @IsString()
+  urlSheet?: string;
 }

@@ -18,7 +18,7 @@ export class ProcessedItem {
   @Column({ type: 'varchar', length: 50 })
   type: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   database: string;
 
   @Column({ type: 'text' })
@@ -33,6 +33,12 @@ export class ProcessedItem {
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   dbField: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  io: string;
+
+  @Column({ type: 'boolean', nullable: true, default: false })
+  required: boolean;
 
   @ManyToOne(() => ImageProcessingResult, imageProcessingResult => imageProcessingResult.processedItems)
   @JoinColumn({ name: 'imageProcessingResultId' })

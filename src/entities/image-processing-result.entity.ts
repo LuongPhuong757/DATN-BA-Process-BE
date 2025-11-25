@@ -25,6 +25,12 @@ export class ImageProcessingResult {
   @Column({ type: 'int' })
   screenId: number;
 
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  imageUrl: string;
+
+  @Column({ type: 'varchar', length: 1000, nullable: true })
+  urlSheet: string;
+
   @ManyToOne(() => Screen, screen => screen.imageProcessingResults)
   @JoinColumn({ name: 'screenId' })
   screen: Screen;
